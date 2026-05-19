@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+
 
 from extensions import db
 from models.user_model import User
@@ -71,4 +72,15 @@ def login():
             "role": user.role 
         }
     }),200
+
+@auth_bp.route('/profile', methods=['GET'])
+@jwt_required()
+def profile():
+
+    current_user = get_jwt_identity()
+
+    return jsonify({
+        "message": "Protected profile route",
+        "user": current_user
+    }), 200
     
