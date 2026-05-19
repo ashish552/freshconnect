@@ -5,6 +5,7 @@ from routes.auth_routes import auth_bp
 from config import Config
 from extensions import db, jwt
 from models.user_model import User
+from models.product_model import Product
 
 app = Flask(__name__)
 
