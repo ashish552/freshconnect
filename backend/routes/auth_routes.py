@@ -56,11 +56,7 @@ def login():
             "message":"Not valid id or password"
         }), 401
     
-    access_token = create_access_token(identity={
-        'id': user.id,
-        'email': user.email,
-        'role': user.role
-    })
+    access_token = create_access_token(identity=str(user.id))
 
     return jsonify({
         "message": "Login successful",
@@ -81,6 +77,6 @@ def profile():
 
     return jsonify({
         "message": "Protected profile route",
-        "user": current_user
+        "user_id": current_user
     }), 200
     
