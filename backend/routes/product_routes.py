@@ -35,3 +35,26 @@ def add_product():
     return jsonify({
         "message": "Product added successfully"
     }), 201
+
+@product_bp.route('/products', methods=['GET'])
+def get_products():
+
+    products = Product.query.all()
+
+    product_list = []
+
+    for product in products:
+
+        product_data = {
+            "id": product.id,
+            "name": product.name,
+            "description": product.description,
+            "price": product.price,
+            "quantity": product.quantity,
+            "image_url": product.image_url,
+            "producer_id": product.producer_id
+        }
+
+        product_list.append(product_data)
+
+    return jsonify(product_list), 200
