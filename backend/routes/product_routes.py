@@ -58,3 +58,35 @@ def get_products():
         product_list.append(product_data)
 
     return jsonify(product_list), 200
+
+@product_bp.route('/products/<int:product_id>', methods=['PUT'])
+@jwt_required()
+def update_product(product_id):
+
+    current_user_id = int(get_jwt_identity())
+
+    product = Product.query.get(product_id)
+
+    if not product:
+        return jsonify({
+            "message": "Product not found"
+        }), 404
+
+    if product.producer_id != current_user_id:
+        return jsonify({
+            "message": "Unauthorized"
+        }), 403
+
+    data = request.get_json()
+
+    product.name = data.get('name', product.name)
+    product.description = data.get('description', product.description)
+    product.price = data.get('price', product.price)
+    product.quantity = data.get('quantity', product.quantity)
+    product.image_url = data.get('image_url', product.image_url)
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Product updated successfully"
+    }), 200
